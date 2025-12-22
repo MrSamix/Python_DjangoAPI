@@ -207,4 +207,9 @@ sketch
 .history
 .ionide
 
+
+DjangoAPI/images
+DjangoAPI/atbapi/images
+
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,react
