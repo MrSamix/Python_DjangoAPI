@@ -13,8 +13,18 @@ function Navbar() {
           </Button>
         </li>
         <li>
+           <Button variant="solid" color="green" onClick={() => navigate("/auth/login")}>
+              Login
+            </Button>
+        </li>
+        <li>
            <Button variant="solid" color="green" onClick={() => navigate("/auth/register")}>
               Sign Up
+            </Button>
+        </li>
+        <li>
+           <Button variant="solid" color="orange" onClick={() => navigate("/auth/profile")}>
+              Profile
             </Button>
         </li>
       </ul>

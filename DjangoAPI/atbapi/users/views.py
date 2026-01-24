@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from drf_spectacular.utils import extend_schema
 
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import LoginSerializer, RegisterSerializer, UserSerializer
 from .models import CustomUser
 
 
@@ -35,4 +35,28 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
                 "access": str(refresh.access_token),
             },
             status=status.HTTP_201_CREATED
+        )
+    
+    @extend_schema(
+        request=LoginSerializer,
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path='login',
+        parser_classes=[parsers.MultiPartParser, parsers.FormParser],
+    )
+    def login(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data['user']
+        refresh = RefreshToken.for_user(user)
+        
+        return Response(
+            {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            },
+            status=status.HTTP_200_OK
         )

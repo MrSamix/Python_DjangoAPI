@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .utils import compress_image
 from .models import CustomUser
+from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -54,3 +55,25 @@ class RegisterSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+    
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True, trim_whitespace=False)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        request = self.context.get('request')
+        user = authenticate(request=request, username=username, password=password)
+
+        if user is None:
+            raise serializers.ValidationError("Невірний логін або пароль.")
+
+        if hasattr(user, "is_active") and not user.is_active:
+            raise serializers.ValidationError("Користувач вимкнений.")
+
+        attrs['user'] = user
+        return attrs
