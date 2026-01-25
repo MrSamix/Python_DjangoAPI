@@ -57,38 +57,38 @@ const ResetPassword: React.FC = () => {
             }
           }}
         >
-            <Form
-                name="basic"
-                labelCol={{ span: 10 }}
-                wrapperCol={{ span: 25 }}
-                style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                autoComplete="off"
-            >
-                <Form.Item<FieldType>
+        <Form
+            name="basic"
+            labelCol={{ span: 10 }}
+            wrapperCol={{ span: 25 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            autoComplete="off"
+        >
+            <Form.Item<FieldType>
                 label="New Password"
                 name="password"
                 rules={[{ required: true, message: 'Будь ласка, введіть ваш пароль!' }]}
-                >
+            >
                 <Input.Password />
-                </Form.Item>
+            </Form.Item>
 
-                <Form.Item<FieldType>
+            <Form.Item<FieldType>
                 label="Confirm Password"
                 name="confirmPassword"
                 rules={[{ required: true, message: 'Будь ласка, введіть ваш пароль ще раз!' }]}
-                >
+            >
                 <Input.Password />
-                </Form.Item>
+            </Form.Item>
 
 
-                <Form.Item>
+            <Form.Item>
                 <Button type="primary" htmlType="submit" loading={isLoading}>
                     Скинути пароль
                 </Button>
-                </Form.Item>
-            </Form>
+            </Form.Item>
+        </Form>
         </ConfigProvider>
     </div>
   );

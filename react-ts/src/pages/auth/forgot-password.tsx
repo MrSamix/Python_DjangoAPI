@@ -29,7 +29,8 @@ const ForgotPassword: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
-                <Button htmlType="submit" loading={isLoading}>
+                <br />
+                <Button htmlType="submit" loading={isLoading} style={{marginTop: 16}}>
                     {isLoading ? "Відправка..." : "Відновити пароль"}
                 </Button>
             </form>

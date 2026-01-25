@@ -18,6 +18,11 @@ function Navbar() {
             </Button>
         </li>
         <li>
+           <Button variant="solid" color="green" onClick={() => navigate("/auth/forgot-password")}>
+              Forgot Password
+            </Button>
+        </li>
+        <li>
            <Button variant="solid" color="green" onClick={() => navigate("/auth/register")}>
               Sign Up
             </Button>
