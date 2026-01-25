@@ -4,6 +4,8 @@ import type { AuthRegisterModel } from "../types/auth/AuthRegisterModel";
 import { serialize } from "object-to-formdata";
 import type { AuthLoginModel } from "../types/auth/AuthLoginModel";
 import type { AuthItemModel } from "../types/auth/AuthItemModel";
+import type { AuthForgotPasswordRequest } from "../types/auth/AuthForgotPasswordRequest";
+import type { AuthResetPasswordRequest } from "../types/auth/AuthResetPasswordRequest";
 
 interface IAuthResponse {
     refresh: string | null;
@@ -48,6 +50,20 @@ export const apiAuth = createApi({
                 method: "GET",
                 url: `${id}/`
             })
+        }),
+        forgotPassword: builder.mutation<void, AuthForgotPasswordRequest>({
+            query: (model) => ({
+                method: "POST",
+                url: "forgot-password/",
+                body: model
+            })
+        }),
+        resetPassword : builder.mutation<void, AuthResetPasswordRequest>({
+            query: (model) => ({
+                method: "POST",
+                url: "reset-password/",
+                body: model
+            })
         })
     })
 })
@@ -55,5 +71,7 @@ export const apiAuth = createApi({
 export const { 
     useRegisterMutation,
     useLoginMutation,
-    useGetUserInfoMutation
+    useGetUserInfoMutation,
+    useForgotPasswordMutation,
+    useResetPasswordMutation
 } = apiAuth;
