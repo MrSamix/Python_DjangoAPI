@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { useResetPasswordMutation } from '../../services/apiAuth';
 import { Button, message, Form, Input, type FormProps, ConfigProvider } from 'antd';
