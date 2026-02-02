@@ -13,27 +13,29 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   server:
-    build: ./DjangoAPI/atbapi
+    #build: ./DjangoAPI/atbapi
+    image: mrsamix/python_django_api:latest
     container_name: django
     env_file:
       - .env
     volumes:
       - image_data:/app/images
     ports:
-      - "8000:8000"
+      - "8361:8000"
     depends_on:
       - db
 
   front:
-    build: 
-      context: ./react-ts
-      args:
-        VITE_API_URL: ${VITE_API_URL}
+    #build: 
+    #  context: ./react-ts
+    #  args:
+    #    VITE_API_URL: ${VITE_API_URL}
+    image: mrsamix/python_django_react
     container_name: front
     depends_on:
       - server
     ports:
-      - "3000:80"
+      - "3571:80"
 
 volumes:
   postgres_data:
