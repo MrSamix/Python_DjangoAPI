@@ -1,12 +1,14 @@
 import type { FormProps } from 'antd';
 import { Button, ConfigProvider, Form, Input, message } from 'antd';
 import type { AuthLoginModel } from '../../types/auth/AuthLoginModel';
-import { useLoginMutation } from '../../services/apiAuth';
+import { useGoogleLoginMutation, useLoginMutation } from '../../services/apiAuth';
 import { useNavigate } from 'react-router';
+import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 
 
 
 function LoginPage() {
+    const [googleLogin] = useGoogleLoginMutation();
     const [login, {isLoading}] = useLoginMutation();
     const navigate = useNavigate();
 
@@ -31,6 +33,24 @@ function LoginPage() {
         console.log('Failed:', errorInfo);
         message.error("Помилка валідації форми");
     };
+
+    const onGoogleLogin = async (cred: CredentialResponse) => {
+      if (!cred.credential) {
+          return;
+        }
+      try {
+        console.log("Google Credential: ", cred);
+        const response = await googleLogin({ token: cred.credential }).unwrap();
+        if (response.access && response.refresh) {
+            localStorage.setItem("accessToken", response.access);
+            localStorage.setItem("refreshToken", response.refresh);
+        }
+        message.success("Успішний вхід через Google");
+        // navigate("/auth/profile");
+      } catch (e) {
+        message.error("Google авторизація не вдалася");
+      }
+    }
 
     return (
       <ConfigProvider
@@ -72,11 +92,21 @@ function LoginPage() {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item label={null}>
-            <Button type="primary" htmlType="submit" loading={isLoading}>
-              Вхід
-            </Button>
-          </Form.Item>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <GoogleLogin
+              shape='circle'
+              size='medium'
+              onSuccess={onGoogleLogin}
+              onError={() => console.error('Google Login Error')}
+            />
+            
+            <Form.Item label={null}>
+              <Button type="primary" htmlType="submit" loading={isLoading}>
+                Вхід
+              </Button>
+            </Form.Item>
+          </div>
+          
         </Form>
       </ConfigProvider>
     );

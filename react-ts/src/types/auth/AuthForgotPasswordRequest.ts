@@ -1,3 +1,3 @@
-export interface AuthForgotPasswordModel {
+export interface AuthForgotPasswordRequest {
     email: string;
 }

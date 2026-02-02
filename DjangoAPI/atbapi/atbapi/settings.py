@@ -169,6 +169,8 @@ CORS_ALLOWED_ORIGINS = [
 
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 
+CLIENT_ID_OAUTH_GOOGLE = os.getenv("CLIENT_ID_OAUTH_GOOGLE")
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465 

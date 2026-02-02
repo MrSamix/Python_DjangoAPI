@@ -6,6 +6,7 @@ import type { AuthLoginModel } from "../types/auth/AuthLoginModel";
 import type { AuthItemModel } from "../types/auth/AuthItemModel";
 import type { AuthForgotPasswordRequest } from "../types/auth/AuthForgotPasswordRequest";
 import type { AuthResetPasswordRequest } from "../types/auth/AuthResetPasswordRequest";
+import { type AuthGoogleLogin } from "../types/auth/AuthGoogleLogin";
 
 interface IAuthResponse {
     refresh: string | null;
@@ -64,6 +65,13 @@ export const apiAuth = createApi({
                 url: "reset-password/",
                 body: model
             })
+        }),
+        googleLogin: builder.mutation<IAuthResponse, AuthGoogleLogin>({
+            query: (model) => ({
+                method: "POST",
+                url: "google-login/",
+                body: model
+            })
         })
     })
 })
@@ -73,5 +81,6 @@ export const {
     useLoginMutation,
     useGetUserInfoMutation,
     useForgotPasswordMutation,
-    useResetPasswordMutation
+    useResetPasswordMutation,
+    useGoogleLoginMutation
 } = apiAuth;

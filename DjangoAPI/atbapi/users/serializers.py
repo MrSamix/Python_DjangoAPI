@@ -8,6 +8,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -141,3 +144,24 @@ class SetNewPasswordSerializer(serializers.Serializer):
         user = self.validated_data['user']
         user.set_password(self.validated_data['new_password'])
         user.save()
+
+
+class GoogleLoginSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        token = attrs.get("token")
+        try:
+            idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), settings.CLIENT_ID_OAUTH_GOOGLE)
+            email = idinfo.get("email")
+            if not email:
+                raise serializers.ValidationError("Token does not contain email")
+
+            user, created = CustomUser.objects.get_or_create(email=email, defaults={
+                "username": email.split("@")[0]
+            })
+
+            attrs['user'] = user
+            return attrs
+        except ValueError:
+            raise serializers.ValidationError("bad google token")

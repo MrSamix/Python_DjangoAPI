@@ -5,11 +5,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from drf_spectacular.utils import extend_schema
 
-from .serializers import LoginSerializer, PasswordResetRequestSerializer, RegisterSerializer, SetNewPasswordSerializer, UserSerializer
+from .serializers import GoogleLoginSerializer, LoginSerializer, PasswordResetRequestSerializer, RegisterSerializer, SetNewPasswordSerializer, UserSerializer
 from .models import CustomUser
 
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -97,3 +98,23 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         return Response({"detail": "Пароль успішно змінено"}, status=status.HTTP_200_OK)
+    
+
+    @action(detail=False, 
+            methods=["post"], 
+            url_path="google-login", 
+            serializer_class=GoogleLoginSerializer, 
+            parser_classes=[JSONParser, FormParser, MultiPartParser])
+    def google_login(self, request):
+        serializer = GoogleLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            },
+            status=status.HTTP_200_OK
+        )
+        # return Response(serializer.validated_data, status=200)
